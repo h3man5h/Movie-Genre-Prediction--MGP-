@@ -73,7 +73,7 @@
 				</div>
 				<br/>		
 			</div>
-		{% if results %}
+		{% if predictions %}
 		<div class="card" style= "background-color: #BE4A4F">
 			<h1 class = "display-4" style = "color : white; margin-left: 20px;">Output</h2>
 			<table class="table table-hover">
@@ -83,7 +83,7 @@
 						<th scope="col">Score</th>
 					</tr>
 				</thead>
-				{% for g in results %}
+				{% for g in predictions %}
 				<tbody>
 					<tr>
 						<td>{{g[1]}}</td>
