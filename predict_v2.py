@@ -6,6 +6,7 @@ import os
 import joblib
 import pandas as pd
 from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
 # NLTK Packages
 # import nltk
 # nltk.download()
@@ -101,6 +102,30 @@ def clean_plot(input_plot):
 #**********************************************
 app = Flask(__name__)
 app.secret_key = "key"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///history.sqlite3'
+
+#making database
+db = SQLAlchemy(app)
+
+class database(db.Model):
+      _id = db.Column("id", db.Integer, primary_key=True)
+      input_plot=db.Column(db.String)
+      results=db.Column(db.String)
+
+
+
+      def __init__(self, input_plot, results):
+            self.input_plot = input_plot
+            self.results = results
+
+#**********************************************
+#***************** APP-ROUTES *****************
+#**********************************************
+
+#History
+@app.route('/history.htm')
+def history():
+      return render_template("history.htm", values=database.query.all()) 
 
 @app.route('/', methods=["GET","POST"])
 def genre_predictor():
@@ -129,6 +154,11 @@ def genre_predictor():
                 if row.values[0] >= 0.2:
                     temp_list = [int(round(row.values[0]*100,0)), index.capitalize()]
                     predicted_list.append(temp_list)
+            results = "genre"
+            db.create_all()
+            usr= database(input_plot,results)
+            db.session.add(usr)
+            db.session.commit()
             return render_template('home.html', predictions=predicted_list, input_plot=input_plot)
         else:
             return render_template('home.html')
@@ -139,4 +169,5 @@ def genre_predictor():
 
 if __name__ == "__main__":
     app.debug = True
+    db.create_all()
     app.run(host='127.0.0.1', port=8080, debug=True)
