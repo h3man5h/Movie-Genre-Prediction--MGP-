@@ -6,7 +6,11 @@
 		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 		<link rel="stylesheet" href="{{ url_for('static',filename='css/main_hem.css') }}">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 		<title>MGP</title>
+		
 		<style>
 			body{
 				background-color: #e9d5c8;
@@ -45,38 +49,55 @@
 	
 	<body>
 		<!-- Header -->
-		<div class="jumbotron" style = "background-color: #3d6474; color: white">
-			<h1 class="display-4">Movie Genre Predictor</h1>
-			<p class="lead">This module predicts the movie genre based on the plot as its input.</p>
-			<hr class="my-4">
-			<p>A project made in University of Surrey. Check the university page here: </p>
-			<p class="lead">
-				<a class="btn btn-outline-warning btn-lg" href="https://www.surrey.ac.uk" role="button">University of Surrey Page</a>
-			</p>
-		</div>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			  <a class="navbar-brand" href="#">The Movie Genre Predictor</a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
 
-		<!-- Content -->
-			<div class="row" >
-				<div class = "col-md" >
-                    <h2>History Page<br/><br/></h2> 
-                                <table >
-								<tr>
-									<th>Plot</th>
-									<th>Genre Prediction</th>
-								</tr>
-									{% for item in values%}
-								
-								<tr>
-									<td>{{item.input_plot}}</td>
-									<td>{{item.send}}</td>
-								</tr>
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+				  <li class="nav-item">
+					<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				  </li>
+				  <li class="nav-item active">
+					<a class="nav-link" href="#">History</a>
+				  </li>
+				  <li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  Options
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					  <a class="dropdown-item" href="https://www.google.com/webhp?hl=en&sa=X&ved=0ahUKEwjCzfzkrufwAhVQRhUIHebODAIQPAgI">Google search a movie</a>
+					  <a class="dropdown-item" href="https://machinelearningmastery.com/one-vs-rest-and-one-vs-one-for-multi-class-classification/#:~:text=look%20at%20each.-,One-Vs-Rest%20for%20Multi-Class%20Classification,into%20multiple%20binary%20classification%20problems.">Know more about the model</a>
+					  <div class="dropdown-divider"></div>
+					  <a class="dropdown-item" href="https://www.randomlists.com/random-movies?dup=false&qty=10">Random movie search</a>
+					</div>
+				  </li>
+				</ul>
+			  </div>
+		</nav>
+		
+		<h1 style = "text-align: center"class = "display-4 container">History Page</h1> 
+		<hr>
+			<div style = "align-item: center;" class = "container" >
+					<table class="table table-hover table-dark">
+					<tr>
+						<th>Plot</th>
+						<th>Genre Prediction</th>
+					</tr>
+						{% for item in values%}
+					
+					<tr>
+						<td>{{item.input_plot}}</td>
+						<td>{{item.send}}</td>
+					</tr>
 
-									<!-- <td>Resources: {{item.runs}}, Shots: {{item.s}}, Reporting Rate: {{item.q}} </td>
-								</tr> -->
-									{% endfor %}
-								</table>	
-		
-		
+						<!-- <td>Resources: {{item.runs}}, Shots: {{item.s}}, Reporting Rate: {{item.q}} </td>
+					</tr> -->
+						{% endfor %}
+					</table>	
+			</div>
 		{% if error %}<p>{{error}}</p>{% endif %}
 
 	<!-- Copyright -->

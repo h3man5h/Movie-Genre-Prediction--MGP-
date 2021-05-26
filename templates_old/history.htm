@@ -8,7 +8,6 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<title>MGP</title>
 		<style>
-		
 			body{
 				background-color: #e9d5c8;
 			}
@@ -42,7 +41,7 @@
 			  <!-- clear: both; -->
 			<!-- } -->
 			</style>
-		</head>
+	</head>
 	
 	<body>
 		<!-- Header -->
@@ -59,43 +58,24 @@
 		<!-- Content -->
 			<div class="row" >
 				<div class = "col-md" >
-					<form style = "margin-left: 20px; width: 960px;" action="" method="post">
-						<div class = "form-group">
-							<label for = "FormControlText"><h1 class="display-6" style = "color : #9000B3">Welcome ! Feel free to get started.</h1></label>
-							<textarea rows="12" cols="100" type="textarea" style= "background-color: #A6A76B; color: white;" class="form-control" placeholder = "Enter Movie Plot here" name="plot" value="{{request.form.plot}}" ></textarea>
-						</div>
-						<br /><br />
-						<button type="submit" value = "Get prediction" class="btn btn-lg btn-outline-danger btn-block">Get Prediction</button>
-						<button type="button" onclick="location.href = '/history';"  value = "Get history" class="btn btn-lg btn-primary btn-block">Check the history</button>
-					<br/>
-					</form>
-				</div>
-				<div class = "col-sm" id = "scroll-image">
-					<img src = "http://pngimg.com/uploads/darth_vader/darth_vader_PNG28.png"  height = "500" width = "700" class = "test" />
-				</div>
-				<br/>		
-			</div>
-		{% if predictions %}
-		<div class="card" style= "background-color: #BE4A4F">
-			<h1 class = "display-4" style = "color : white; margin-left: 20px;">Output</h2>
-			<table class="table table-hover">
-				<thead class = "thead-dark">
-					<tr>
-						<th scope="col">Genre</th>
-						<th scope="col">Score</th>
-					</tr>
-				</thead>
-				{% for g in predictions %}
-				<tbody>
-					<tr>
-						<td>{{g[1]}}</td>
-						<td>{{g[0]}} %</td>
-					</tr>
-			  </tbody>
-			  {% endfor %}
-			</table>
-		</div>
-		{%endif%}
+                    <h2>History Page<br/><br/></h2> 
+                                <table >
+								<tr>
+									<th>Plot</th>
+									<th>Genre Prediction</th>
+								</tr>
+									{% for item in values%}
+								
+								<tr>
+									<td>{{item.input_plot}}</td>
+									<td>{{item.send}}</td>
+								</tr>
+
+									<!-- <td>Resources: {{item.runs}}, Shots: {{item.s}}, Reporting Rate: {{item.q}} </td>
+								</tr> -->
+									{% endfor %}
+								</table>	
+		
 		
 		{% if error %}<p>{{error}}</p>{% endif %}
 
