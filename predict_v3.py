@@ -7,6 +7,10 @@ import joblib
 import pandas as pd
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import json
+import sqlalchemy
+from sqlalchemy.types import TypeDecorator
+
 # NLTK Packages
 # import nltk
 # nltk.download()
@@ -97,39 +101,49 @@ def clean_plot(input_plot):
     return_string = untokenizer(lemma)
     return return_string
 
+# result cleaner
+SIZE = 256
+
+class TextPickleType(TypeDecorator):
+
+    impl = sqlalchemy.Text(SIZE)
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
 #**********************************************
 #****************** Flask *********************
 #**********************************************
-app = Flask(__name__)
+app = Flask(__name__, template_folder = "templates/")
 app.secret_key = "key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///history.sqlite3'
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 #making database
 db = SQLAlchemy(app)
 
 class database(db.Model):
       _id = db.Column("id", db.Integer, primary_key=True)
-      input_plot=db.Column(db.String)
-      results=db.Column(db.String)
+      input_plot = db.Column(db.String)
+      send = db.Column(TextPickleType)
 
-
-
-      def __init__(self, input_plot, results):
+      def __init__(self, input_plot, send):
             self.input_plot = input_plot
-            self.results = results
+            self.send = send
 
 #**********************************************
 #***************** APP-ROUTES *****************
 #**********************************************
 
-#History
-@app.route('/history.htm')
-def history():
-      return render_template("history.htm", values=database.query.all()) 
 
 @app.route('/', methods=["GET","POST"])
 def genre_predictor():
-
     try:
         if request.method == "POST":
             input_plot = request.form['plot']
@@ -154,9 +168,13 @@ def genre_predictor():
                 if row.values[0] >= 0.2:
                     temp_list = [int(round(row.values[0]*100,0)), index.capitalize()]
                     predicted_list.append(temp_list)
-            results = "genre"
+            print(predicted_list)
+            results = [x[::-1] for x in predicted_list]
+            itemDict = {item[0]: item[1:] for item in results}
+            send = json.dumps(itemDict)
+            print(type(itemDict))
             db.create_all()
-            usr= database(input_plot,results)
+            usr= database(input_plot,send)
             db.session.add(usr)
             db.session.commit()
             return render_template('home.html', predictions=predicted_list, input_plot=input_plot)
@@ -166,6 +184,15 @@ def genre_predictor():
     except Exception as e:
         print(e)
         return render_template("home.html", error = e)
+
+@app.route('/')
+def form():
+    return render_template('home.html')
+
+#History
+@app.route('/history')
+def history():
+      return render_template("history.htm", values=database.query.all())
 
 if __name__ == "__main__":
     app.debug = True
